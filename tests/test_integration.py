@@ -22,7 +22,7 @@ sys.path.insert(0, str(project_root))
 from src.cli import CLI, main, PrivilegeChecker
 from src.core.check import BaseCheck, CheckResult, Severity
 from src.core.detector import EnvironmentDetector, DetectionResult, EnvironmentType
-from src.core.platform import DistroInfo, PlatformContext
+from src.core.platform import DistroInfo, PlatformContext, load_platform_context
 from src.core.registry import CheckRegistry
 from src.output.json_formatter import JSONFormatter
 
@@ -592,7 +592,11 @@ class TestMockedExternalDependencies:
             stderr=""
         )
         
-        detector = EnvironmentDetector()
+        fedora_context = load_platform_context(
+            profile_id="fedora-43",
+            os_release_path="/nonexistent/os-release",
+        )
+        detector = EnvironmentDetector(platform_context=fedora_context)
         result = detector._is_package_installed("firewalld")
         
         assert result is True
