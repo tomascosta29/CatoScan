@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "profile_id": "ubuntu-24.04",
+  "family": "debian",
+  "match": {
+    "os_id": ["ubuntu"],
+    "version_id": ["24.04"]
+  },
+  "package_manager": {
+    "name": "apt",
+    "query_installed": [
+      {
+        "cmd": ["dpkg", "-s", "{package}"],
+        "timeout": 5
+      }
+    ],
+    "package_aliases": {
+      "chronyd": ["chrony"],
+      "systemd-timesyncd": ["systemd-timesyncd"],
+      "httpd": ["apache2"],
+      "xorg-x11-server-common": ["xserver-xorg-core"],
+      "xorg-x11-server-Xorg": ["xserver-xorg-core"],
+      "xorg-x11-server-utils": ["x11-xserver-utils"],
+      "dhcp-server": ["isc-dhcp-server"],
+      "bind": ["bind9"],
+      "openldap-servers": ["slapd"],
+      "openldap-clients": ["ldap-utils"],
+      "net-snmp": ["snmpd"],
+      "nfs-utils": ["nfs-kernel-server", "nfs-common"],
+      "ypserv": ["nis"],
+      "ypbind": ["nis"],
+      "avahi": ["avahi-daemon"],
+      "grub2": ["grub-pc", "grub-efi-amd64"],
+      "iptables-services": ["iptables-persistent"]
+    }
+  },
+  "service_manager": {
+    "name": "systemd",
+    "service_aliases": {
+      "httpd": ["apache2"],
+      "dhcpd": ["isc-dhcp-server"],
+      "named": ["bind9"],
+      "smb": ["smbd"],
+      "nfs-server": ["nfs-kernel-server"],
+      "chronyd": ["chrony"],
+      "rsyncd": ["rsync"],
+      "ypserv": ["nis"],
+      "ypbind": ["nis"],
+      "tftp": ["tftpd-hpa"],
+      "tftp.socket": ["tftpd-hpa.socket"]
+    },
+    "is_active": {
+      "cmd": ["systemctl", "is-active", "{service}"],
+      "timeout": 5
+    },
+    "is_enabled": {
+      "cmd": ["systemctl", "is-enabled", "{service}"],
+      "timeout": 5
+    }
+  },
+  "paths": {
+    "grub_cfg": [
+      "/boot/grub/grub.cfg",
+      "/boot/efi/EFI/ubuntu/grub.cfg"
+    ],
+    "grub_dirs": [
+      "/boot/grub",
+      "/boot/efi/EFI/ubuntu",
+      "/etc/grub.d"
+    ],
+    "grub_default_config": [
+      "/etc/default/grub"
+    ],
+    "grub_custom_configs": [
+      "/etc/grub.d/40_custom",
+      "/etc/grub.d/01_users"
+    ],
+    "network_config_paths": [
+      "/etc/netplan/*.yaml",
+      "/etc/NetworkManager/system-connections/*"
+    ]
+  },
+  "remediation": {
+    "install_packages": "sudo apt-get install -y {packages}",
+    "remove_packages": "sudo apt-get remove -y {packages}",
+    "enable_service": "sudo systemctl enable {service}",
+    "disable_service": "sudo systemctl disable {service}",
+    "start_service": "sudo systemctl start {service}",
+    "stop_service": "sudo systemctl stop {service}",
+    "reload_service": "sudo systemctl reload {service}",
+    "restart_service": "sudo systemctl restart {service}",
+    "status_service": "sudo systemctl status {service}",
+    "grub_mkconfig": "sudo grub-mkconfig -o {output}",
+    "grub_password_hash": "sudo grub-mkpasswd-pbkdf2"
+  },
+  "features": {
+    "selinux_default": false,
+    "firewalld_default": false
+  }
+}

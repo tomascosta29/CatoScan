@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatoScan - Audit Results Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🔒</span>
+                    <h1>CatoScan</h1>
+                </div>
+                <div class="header-actions">
+                    <label for="file-input" class="btn btn-primary">
+                        <span class="btn-icon">📁</span>
+                        Load JSON Report
+                    </label>
+                    <input type="file" id="file-input" accept=".json" hidden>
+                    <button id="export-btn" class="btn btn-secondary" disabled>
+                        <span class="btn-icon">💾</span>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <h2>No Audit Report Loaded</h2>
+                <p>Load a JSON audit report to view the results</p>
+                <label for="file-input-empty" class="btn btn-primary btn-large">
+                    <span class="btn-icon">📁</span>
+                    Select JSON File
+                </label>
+                <input type="file" id="file-input-empty" accept=".json" hidden>
+            </div>
+
+            <!-- Dashboard (hidden initially) -->
+            <div id="dashboard" class="dashboard hidden">
+                <!-- Report Header -->
+                <section class="report-header">
+                    <div class="report-info">
+                        <h2 id="report-hostname">Hostname</h2>
+                        <div class="report-meta">
+                            <span class="meta-item" id="report-timestamp">
+                                <span class="meta-icon">🕐</span>
+                                <span class="meta-value">--</span>
+                            </span>
+                            <span class="meta-item" id="report-environment">
+                                <span class="meta-icon">🖥️</span>
+                                <span class="meta-value">--</span>
+                            </span>
+                            <span class="meta-item" id="report-privileged">
+                                <span class="meta-icon">👤</span>
+                                <span class="meta-value">--</span>
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Summary Cards -->
+                <section class="summary-section">
+                    <div class="summary-cards">
+                        <div class="summary-card card-total">
+                            <div class="card-icon">📋</div>
+                            <div class="card-content">
+                                <div class="card-value" id="summary-total">0</div>
+                                <div class="card-label">Total Checks</div>
+                            </div>
+                        </div>
+                        <div class="summary-card card-passed">
+                            <div class="card-icon">✓</div>
+                            <div class="card-content">
+                                <div class="card-value" id="summary-passed">0</div>
+                                <div class="card-label">Passed</div>
+                            </div>
+                        </div>
+                        <div class="summary-card card-failed">
+                            <div class="card-icon">✗</div>
+                            <div class="card-content">
+                                <div class="card-value" id="summary-failed">0</div>
+                                <div class="card-label">Failed</div>
+                            </div>
+                        </div>
+                        <div class="summary-card card-skipped">
+                            <div class="card-icon">⊘</div>
+                            <div class="card-content">
+                                <div class="card-value" id="summary-skipped">0</div>
+                                <div class="card-label">Skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Severity Breakdown -->
+                <section class="severity-section">
+                    <h3 class="section-title">Severity Breakdown</h3>
+                    <div class="severity-chart" id="severity-chart">
+                        <!-- Bars will be generated by JS -->
+                    </div>
+                    <div class="severity-legend">
+                        <div class="legend-item">
+                            <span class="legend-color severity-critical"></span>
+                            <span class="legend-label">Critical</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color severity-high"></span>
+                            <span class="legend-label">High</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color severity-medium"></span>
+                            <span class="legend-label">Medium</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color severity-low"></span>
+                            <span class="legend-label">Low</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Filters -->
+                <section class="filters-section">
+                    <div class="filters-row">
+                        <div class="filter-group search-group">
+                            <span class="filter-icon">🔍</span>
+                            <input type="text" id="search-input" class="search-input" placeholder="Search checks by name or ID...">
+                        </div>
+                        <div class="filter-group">
+                            <label for="status-filter">Status:</label>
+                            <select id="status-filter" class="filter-select">
+                                <option value="all">All</option>
+                                <option value="passed">Passed</option>
+                                <option value="failed">Failed</option>
+                                <option value="skipped">Skipped</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="severity-filter">Severity:</label>
+                            <select id="severity-filter" class="filter-select">
+                                <option value="all">All</option>
+                                <option value="CRITICAL">Critical</option>
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="LOW">Low</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <button id="reset-filters" class="btn btn-ghost">
+                                <span class="btn-icon">↺</span>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                    <div class="results-count">
+                        Showing <span id="filtered-count">0</span> of <span id="total-count">0</span> checks
+                    </div>
+                </section>
+
+                <!-- Checks List -->
+                <section class="checks-section">
+                    <div id="checks-list" class="checks-list">
+                        <!-- Check items will be generated by JS -->
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>CatoScan - CIS Audit Tool for Fedora 43</p>
+            <p class="footer-hint">Press <kbd>?</kbd> for keyboard shortcuts</p>
+        </footer>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcuts-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Keyboard Shortcuts</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>O</kbd>
+                        <span>Open JSON file</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>F</kbd>
+                        <span>Focus search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Esc</kbd>
+                        <span>Close modal / Clear search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>?</kbd>
+                        <span>Show this help</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

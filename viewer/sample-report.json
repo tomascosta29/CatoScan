@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "timestamp": "2024-02-16T14:30:00+00:00",
+    "hostname": "fedora-test-server",
+    "fedora_version": "43",
+    "environment": "server",
+    "privileged": true
+  },
+  "summary": {
+    "total_checks": 20,
+    "passed": 15,
+    "failed": 3,
+    "skipped": 2,
+    "by_severity": {
+      "CRITICAL": {"total": 2, "passed": 2, "failed": 0},
+      "HIGH": {"total": 5, "passed": 4, "failed": 1},
+      "MEDIUM": {"total": 8, "passed": 6, "failed": 2},
+      "LOW": {"total": 5, "passed": 3, "failed": 0}
+    }
+  },
+  "checks": [
+    {
+      "id": "auth_password_complexity",
+      "name": "Password Complexity Requirements",
+      "passed": true,
+      "skipped": false,
+      "severity": "HIGH",
+      "message": "Password complexity is properly configured via PAM pwquality",
+      "remediation": "",
+      "details": {
+        "minlen": 14,
+        "minclass": 4,
+        "dcredit": -1,
+        "ucredit": -1,
+        "ocredit": -1,
+        "lcredit": -1
+      }
+    },
+    {
+      "id": "auth_account_lockout",
+      "name": "Account Lockout Policy",
+      "passed": true,
+      "skipped": false,
+      "severity": "HIGH",
+      "message": "Account lockout is configured for failed login attempts",
+      "remediation": "",
+      "details": {
+        "deny": 5,
+        "unlock_time": 900,
+        "fail_interval": 900
+      }
+    },
+    {
+      "id": "auth_password_expiration",
+      "name": "Password Expiration Settings",
+      "passed": false,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "Password max age is set to 99999 days (should be 90 or less)",
+      "remediation": "Set PASS_MAX_DAYS to 90 in /etc/login.defs and run 'chage -M 90' for all users",
+      "details": {
+        "current_max_days": 99999,
+        "recommended_max_days": 90
+      }
+    },
+    {
+      "id": "auth_empty_passwords",
+      "name": "Empty Password Accounts",
+      "passed": true,
+      "skipped": false,
+      "severity": "CRITICAL",
+      "message": "No accounts with empty passwords found",
+      "remediation": "",
+      "details": {
+        "accounts_checked": 15,
+        "empty_password_accounts": []
+      }
+    },
+    {
+      "id": "auth_root_ssh",
+      "name": "Root SSH Login Restriction",
+      "passed": true,
+      "skipped": false,
+      "severity": "CRITICAL",
+      "message": "Root login via SSH is disabled (PermitRootLogin=no)",
+      "remediation": "",
+      "details": {
+        "permit_root_login": "no",
+        "config_file": "/etc/ssh/sshd_config"
+      }
+    },
+    {
+      "id": "logging_rsyslog",
+      "name": "Rsyslog Service Status",
+      "passed": true,
+      "skipped": false,
+      "severity": "HIGH",
+      "message": "rsyslog is installed, running, and enabled",
+      "remediation": "",
+      "details": {
+        "installed": true,
+        "running": true,
+        "enabled": true
+      }
+    },
+    {
+      "id": "logging_auditd",
+      "name": "Audit Daemon Status",
+      "passed": false,
+      "skipped": false,
+      "severity": "HIGH",
+      "message": "auditd is installed but not running",
+      "remediation": "Start and enable auditd: systemctl start auditd && systemctl enable auditd",
+      "details": {
+        "installed": true,
+        "running": false,
+        "enabled": false
+      }
+    },
+    {
+      "id": "logging_permissions",
+      "name": "Log File Permissions",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "All log files have secure permissions (640 or stricter)",
+      "remediation": "",
+      "details": {
+        "files_checked": 12,
+        "insecure_files": []
+      }
+    },
+    {
+      "id": "logging_remote",
+      "name": "Remote Logging Configuration",
+      "passed": true,
+      "skipped": false,
+      "severity": "LOW",
+      "message": "Remote logging is configured",
+      "remediation": "",
+      "details": {
+        "remote_server": "logs.example.com",
+        "protocol": "tcp"
+      }
+    },
+    {
+      "id": "logging_audit_rules",
+      "name": "Audit Rules Configuration",
+      "passed": false,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "No custom audit rules configured",
+      "remediation": "Add audit rules to /etc/audit/rules.d/audit.rules for monitoring sensitive files",
+      "details": {
+        "rules_loaded": 0,
+        "recommended_rules": [
+          "-w /etc/passwd -p wa -k identity",
+          "-w /etc/group -p wa -k identity"
+        ]
+      }
+    },
+    {
+      "id": "network_firewalld",
+      "name": "FirewallD Service Status",
+      "passed": true,
+      "skipped": false,
+      "severity": "HIGH",
+      "message": "firewalld is installed, running, and enabled",
+      "remediation": "",
+      "details": {
+        "installed": true,
+        "running": true,
+        "enabled": true
+      }
+    },
+    {
+      "id": "network_default_zone",
+      "name": "Default Firewall Zone",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "Default zone is set to 'public' with reasonable restrictions",
+      "remediation": "",
+      "details": {
+        "default_zone": "public",
+        "target": "default"
+      }
+    },
+    {
+      "id": "network_ipv6",
+      "name": "IPv6 Configuration",
+      "passed": true,
+      "skipped": false,
+      "severity": "LOW",
+      "message": "IPv6 is enabled (informational check)",
+      "remediation": "",
+      "details": {
+        "ipv6_enabled": true,
+        "note": "IPv6 status is informational only"
+      }
+    },
+    {
+      "id": "network_tcp_wrappers",
+      "name": "TCP Wrappers Configuration",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "hosts.allow and hosts.deny are configured",
+      "remediation": "",
+      "details": {
+        "hosts_allow_exists": true,
+        "hosts_deny_exists": true
+      }
+    },
+    {
+      "id": "network_services",
+      "name": "Suspicious Network Services",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "No suspicious services found on non-standard ports",
+      "remediation": "",
+      "details": {
+        "services_checked": 8,
+        "suspicious_services": []
+      }
+    },
+    {
+      "id": "fs_tmp_mount",
+      "name": "/tmp Mount Options",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "/tmp is mounted with noexec, nosuid, nodev options",
+      "remediation": "",
+      "details": {
+        "mount_options": ["noexec", "nosuid", "nodev"],
+        "filesystem": "tmpfs"
+      }
+    },
+    {
+      "id": "fs_var_tmp",
+      "name": "/var/tmp Permissions",
+      "passed": true,
+      "skipped": false,
+      "severity": "LOW",
+      "message": "/var/tmp has sticky bit set and secure permissions",
+      "remediation": "",
+      "details": {
+        "permissions": "drwxrwxrwt",
+        "sticky_bit": true
+      }
+    },
+    {
+      "id": "fs_world_writable",
+      "name": "World-Writable Files",
+      "passed": true,
+      "skipped": false,
+      "severity": "MEDIUM",
+      "message": "No world-writable files found outside temp directories",
+      "remediation": "",
+      "details": {
+        "files_checked": 15023,
+        "world_writable_count": 0
+      }
+    },
+    {
+      "id": "fs_suid_sgid",
+      "name": "SUID/SGID File Audit",
+      "passed": false,
+      "skipped": true,
+      "severity": "HIGH",
+      "message": "Check skipped - requires root privileges to scan all SUID/SGID files",
+      "remediation": "Run with sudo for complete SUID/SGID audit",
+      "details": {
+        "requires_root": true,
+        "reason": "Cannot access all directories without elevated privileges"
+      }
+    },
+    {
+      "id": "fs_home_permissions",
+      "name": "Home Directory Permissions",
+      "passed": false,
+      "skipped": true,
+      "severity": "MEDIUM",
+      "message": "Check skipped - requires root privileges to check all home directories",
+      "remediation": "Run with sudo for complete home directory audit",
+      "details": {
+        "requires_root": true,
+        "reason": "Cannot access /root and other user directories without elevated privileges"
+      }
+    }
+  ]
+}

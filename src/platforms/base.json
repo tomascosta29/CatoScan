@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "profile_id": "base",
+  "package_manager": {
+    "name": "rpm",
+    "query_installed": [
+      {
+        "cmd": ["rpm", "-q", "{package}"],
+        "timeout": 5
+      }
+    ],
+    "package_aliases": {}
+  },
+  "service_manager": {
+    "name": "systemd",
+    "service_aliases": {},
+    "is_active": {
+      "cmd": ["systemctl", "is-active", "{service}"],
+      "timeout": 5
+    },
+    "is_enabled": {
+      "cmd": ["systemctl", "is-enabled", "{service}"],
+      "timeout": 5
+    },
+    "get_default_target": {
+      "cmd": ["systemctl", "get-default"],
+      "timeout": 5
+    },
+    "is_target_active": {
+      "cmd": ["systemctl", "is-active", "{target}"],
+      "timeout": 5
+    }
+  },
+  "remediation": {
+    "install_packages": "sudo dnf install {packages}",
+    "remove_packages": "sudo dnf remove {packages}",
+    "enable_service": "sudo systemctl enable {service}",
+    "disable_service": "sudo systemctl disable {service}",
+    "start_service": "sudo systemctl start {service}",
+    "stop_service": "sudo systemctl stop {service}",
+    "reload_service": "sudo systemctl reload {service}",
+    "restart_service": "sudo systemctl restart {service}",
+    "status_service": "sudo systemctl status {service}",
+    "grub_mkconfig": "sudo grub-mkconfig -o {output}",
+    "grub_password_hash": "sudo grub-mkpasswd-pbkdf2"
+  },
+  "paths": {
+    "grub_default_config": [
+      "/etc/default/grub"
+    ],
+    "grub_custom_configs": [
+      "/etc/grub.d/40_custom",
+      "/etc/grub.d/01_users"
+    ],
+    "network_config_paths": [
+      "/etc/NetworkManager/system-connections/*"
+    ]
+  }
+}

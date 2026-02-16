@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "profile_id": "fedora-43",
+  "family": "rhel",
+  "match": {
+    "os_id": ["fedora"],
+    "version_id": ["43"]
+  },
+  "package_manager": {
+    "name": "dnf",
+    "query_installed": [
+      {
+        "cmd": ["rpm", "-q", "{package}"],
+        "timeout": 5
+      },
+      {
+        "cmd": ["dnf", "list", "installed", "{package}"],
+        "timeout": 10
+      }
+    ],
+    "package_aliases": {
+      "systemd-timesyncd": ["systemd"],
+      "chronyd": ["chrony"]
+    }
+  },
+  "service_manager": {
+    "name": "systemd",
+    "service_aliases": {},
+    "is_active": {
+      "cmd": ["systemctl", "is-active", "{service}"],
+      "timeout": 5
+    },
+    "is_enabled": {
+      "cmd": ["systemctl", "is-enabled", "{service}"],
+      "timeout": 5
+    }
+  },
+  "paths": {
+    "grub_cfg": [
+      "/boot/grub2/grub.cfg",
+      "/boot/grub/grub.cfg",
+      "/boot/efi/EFI/fedora/grub.cfg"
+    ],
+    "grub_dirs": [
+      "/boot/grub2",
+      "/boot/grub",
+      "/boot/efi/EFI/fedora",
+      "/etc/grub.d"
+    ],
+    "grub_default_config": [
+      "/etc/default/grub"
+    ],
+    "grub_custom_configs": [
+      "/etc/grub.d/40_custom",
+      "/etc/grub.d/01_users"
+    ],
+    "network_legacy": [
+      "/etc/sysconfig/network",
+      "/etc/sysconfig/network-scripts/ifcfg-*"
+    ],
+    "network_config_paths": [
+      "/etc/sysconfig/network",
+      "/etc/sysconfig/network-scripts/ifcfg-*",
+      "/etc/NetworkManager/system-connections/*"
+    ]
+  },
+  "remediation": {
+    "install_packages": "sudo dnf install {packages}",
+    "remove_packages": "sudo dnf remove {packages}",
+    "enable_service": "sudo systemctl enable {service}",
+    "disable_service": "sudo systemctl disable {service}",
+    "start_service": "sudo systemctl start {service}",
+    "stop_service": "sudo systemctl stop {service}",
+    "reload_service": "sudo systemctl reload {service}",
+    "restart_service": "sudo systemctl restart {service}",
+    "status_service": "sudo systemctl status {service}",
+    "grub_mkconfig": "sudo grub2-mkconfig -o {output}",
+    "grub_password_hash": "sudo grub2-mkpasswd-pbkdf2",
+    "reload_module_initramfs": "sudo dracut -f"
+  },
+  "features": {
+    "selinux_default": true,
+    "firewalld_default": true
+  }
+}
