@@ -448,7 +448,7 @@ Contributions are welcome! When adding new checks:
 
 ## License
 
-[Your License Here]
+This project is licensed under the Apache License 2.0. See `LICENSE` for details.
 
 ## Security Notes
 
