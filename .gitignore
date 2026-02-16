@@ -1,0 +1,10 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+
+# pytest cache
+.pytest_cache/
+
+# Local outputs
+*.log
+*.tmp
