@@ -6,7 +6,7 @@ Provides automated security configuration auditing with support
 for both desktop and server environments via profile-driven adapters.
 """
 
-__version__ = "3.5.0"
+__version__ = "3.5.1"
 __author__ = "CatoScan Project"
 
 from .core.detector import (

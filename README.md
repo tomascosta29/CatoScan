@@ -2,7 +2,7 @@
 
 A read-only security audit tool that checks Linux systems against CIS (Center for Internet Security) benchmarks. The tool auto-detects desktop vs server environments, supports distro profiles, and produces structured JSON reports.
 
-Current release: `3.5.0` (see `CHANGELOG.md`)
+Current release: `3.5.1` (see `CHANGELOG.md`)
 
 ## Overview
 

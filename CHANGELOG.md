@@ -2,6 +2,17 @@
 
 All notable changes to CatoScan are documented in this file.
 
+## 3.5.1 - 2026-02-16
+
+Patch release to correct CI pipeline regressions introduced during 3.5.0 rollout.
+
+### Fixed
+- GitHub Actions setup failure caused by `setup-python` pip caching without dependency manifests.
+- Cross-platform test instability in mocked package manager assertions by pinning Fedora profile for RPM-specific tests.
+
+### Notes
+- This release supersedes 3.5.0 for production use.
+
 ## 3.5.0 - 2026-02-16
 
 Production-ready baseline release with hardened CLI behavior, safer check execution,

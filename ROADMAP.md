@@ -814,7 +814,7 @@ Read-only CIS benchmark audit tool for Fedora 43. Modular design, auto-detects d
 - Hardened discovery module loading to avoid package-name collisions from import cache ✓
 - Added metadata `schema_version` to stabilize JSON consumer contracts ✓
 - Hardened user-account checks with username/home-path safety validation and diagnostic reporting ✓
-- Added release prep artifacts (`CHANGELOG.md`) and bumped package version to `3.5.0` ✓
+- Added release prep artifacts (`CHANGELOG.md`) and bumped package version to `3.5.1` ✓
 - Full regression suite passes: 169 tests ✓
 
 ## Notes
